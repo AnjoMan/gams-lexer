@@ -7,6 +7,7 @@ from pygments.token import (
     Keyword,
     Name,
     Operator,
+    Punctuation,
 )
 
 
@@ -17,32 +18,43 @@ class CustomLexer(RegexLexer):
 
     tokens = {
         'root': [
-            (r'\*.*', Comment.Single),
+            (r'^\*.*', Comment.Single),
             (words((
-                'abs', 'acos', 'acosh', 'alias', 'asin', 'asinh', 'atan', 'atan2',
-                'atanh', 'ceil', 'ctime', 'cos', 'exp', 'floor', 'log', 'log10',
-                'max', 'min', 'precision', 'round', 'sin', 'sinh', 'sqrt', 'tan',
-                'tanh', 'time', 'trunc', 'Beta', 'Cauchy', 'Exponential', 'Gamma',
-                'Irand224', 'Normal', 'Normal01', 'Poisson', 'Uniform', 'Uniform01',
-                'num', 'num0', 'ichar', 'char', 'length', 'substr', 'sprintf',
-                'match', 'sub', 'gsub', 'print', 'printf', 'next', 'nextw', 'prev',
-                'prevw', 'first', 'last', 'ord', 'ord0', 'card', 'arity',
-                'indexarity'), prefix=r'\b', suffix=r'\b'), Name.Builtin),
-            (r'(Parameter|Parameters|Variable|Variables)',
-                Keyword.Declaration),
-            (words((
-                'Equation', 'Equations',
-                'Model',
-                'Variable', 'Variables',
-                'Parameter', 'Parameters',
-                'Set', 'Sets',
-            ), prefix=r'\b', suffix=r'\b'), Keyword.Declaration),
+                "abs", "asc", "sigmoid", "sum",
+                "acos", "acosh", "asin", "asinh", "atan", "atan2",
+                "atanh", "ceil", "ctime", "cos", "cosh", "exp", "floor", "log", "log10",
+                "max", "min", "precision", "round", "sin", "sinh", "sqrt", "tan", "tanh", "sqrt",
+                "smax", "smin",
+                "time", "trunc", "div",
+                "beta", "betareg", "binomial", "edist", "entropy", "errorf", "fact",
+                "gamma", "gammareg", "logbeta", "loggamma", "normal",
+                "mapval", "mod", "ncpcm", "ncpf", "pi", "poly", "power",
+                "sign", "signpower", "trunc", "uniform", "uniformint",
+            ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
+            (r'^Set\s?\n?', Keyword.Declaration, 'value_declarations'),
             (words((
                 'solve', 'Solve',
                 'using', 'USING',
                 'minimizing',
                 'maximizing',
             ), prefix=r'\b', suffix=r'\b'), Keyword.Reserved),
+            (words(("option"), prefix=r'\b', suffix=r'\b'), Name.Builtin),
+            (r'^\$onText*', Keyword, 'onTextBlock'),
             (r'=e=|=l=|=g=', Operator),
+        ],
+        'onTextBlock': [
+            (r'^\$offText*', Keyword, '#pop'),
+            (r'[^\$]', Comment),
+        ],
+        'value_declarations': [
+            (r';', Punctuation, '#pop'),
+            (r'\s*\w+(?=[^;^\w])', Name.Variable, 'value_declaration'),
+            (r'\s*\w+(?=;)', Name.Variable),
+        ],
+        'value_declaration': [
+            (r'\n', Punctuation, '#pop'),
+            (r'\(.*\)', Punctuation),
+            (r'\'?[\w\s]\'?', Comment),
+            (r'\s*\/.+\/\n?', Name.Entity, '#pop'),
         ]
     }
