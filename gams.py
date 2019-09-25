@@ -6,8 +6,10 @@ from pygments.token import (
     Comment,
     Keyword,
     Name,
+    Literal,
     Operator,
     Punctuation,
+    String,
 )
 
 
@@ -31,7 +33,12 @@ class CustomLexer(RegexLexer):
                 "mapval", "mod", "ncpcm", "ncpf", "pi", "poly", "power",
                 "sign", "signpower", "trunc", "uniform", "uniformint",
             ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
-            (r'^Set\s?\n?', Keyword.Declaration, 'value_declarations'),
+            (words((
+                'card'
+            ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
+            (r'^Sets?\n?', Keyword.Declaration, 'value_declarations'),
+            (r'^Parameters?\n?', Keyword.Declaration, 'value_declarations'),
+            (r'(?:[^\.])\w+(?=\()', Name.Variable),  # vars without .l
             (words((
                 'solve', 'Solve',
                 'using', 'USING',
@@ -41,6 +48,7 @@ class CustomLexer(RegexLexer):
             (words(("option"), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (r'^\$onText*', Keyword, 'onTextBlock'),
             (r'=e=|=l=|=g=', Operator),
+            (r'%\w+%', String.Interpol),
         ],
         'onTextBlock': [
             (r'^\$offText*', Keyword, '#pop'),
