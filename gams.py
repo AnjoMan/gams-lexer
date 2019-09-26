@@ -49,6 +49,7 @@ class CustomLexer(RegexLexer):
                 'minimizing',
                 'maximizing',
             ), prefix=r'\b', suffix=r'\b'), Keyword.Reserved),
+            (r'"', String, 'onStringBlock'),
             (words(("option"), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (r'^\$onText*', Keyword, 'onTextBlock'),
             (r'=e=|=l=|=g=', Operator),
@@ -57,6 +58,11 @@ class CustomLexer(RegexLexer):
         'onTextBlock': [
             (r'^\$offText*', Keyword, '#pop'),
             (r'[^\$]', Comment),
+        ],
+        'onStringBlock': [
+            (r'[^%^"]+', String),
+            (r'%\w+%', String.Interpol),
+            (r'"', String, '#pop'),
         ],
         'value_declarations': [
             (r';', Punctuation, '#pop'),
