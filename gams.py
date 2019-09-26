@@ -43,6 +43,9 @@ class CustomLexer(RegexLexer):
             (r'^(Set|Equation|Parameter|Alias)s?\n?', Keyword.Declaration, 'value_declarations'),
             (r'^\w+\s+Variables?\n?', Keyword.Declaration, 'value_declarations'),
             (r'(?:[^\.])\w+(?=\()', Name.Variable),  # vars without .l
+            (r'(?:[^\.])\w+(?=\()', Name.Variable),  # vars without .l
+            (r'\w+(?=\.(l|lo|hi|fx|up))', Name.Variable),  # vars with .l
+            (r'\.\w+(?=\()', Name.Variable),
             (words((
                 'solve', 'Solve',
                 'using', 'USING',
