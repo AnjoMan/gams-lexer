@@ -55,7 +55,9 @@ class CustomLexer(RegexLexer):
             (r'"', String, 'onStringBlock'),
             (words(("option"), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (r'^\$onText*', Keyword, 'onTextBlock'),
-            (r'=e=|=l=|=g=', Operator),
+            (words((
+              '=e=', '=l=', '=g=', 'eq', '<', '>', '==', 'or', 'and',
+            ), prefix=r'\b', suffix=r'\b'), Operator),
             (r'%\w+%', String.Interpol),
         ],
         'onTextBlock': [
