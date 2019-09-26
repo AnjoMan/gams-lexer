@@ -59,6 +59,7 @@ class CustomLexer(RegexLexer):
               '=e=', '=l=', '=g=', 'eq', '<', '>', '==', 'or', 'and',
             ), prefix=r'\b', suffix=r'\b'), Operator),
             (r'%\w+%', String.Interpol),
+            (r'\$\w+\s', Keyword),
         ],
         'onTextBlock': [
             (r'^\$offText*', Keyword, '#pop'),
