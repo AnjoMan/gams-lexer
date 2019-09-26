@@ -1,4 +1,4 @@
-from pygments.lexer import RegexLexer
+from pygments.lexer import RegexLexer, bygroups
 from pygments.lexer import (
     words,
 )
@@ -10,6 +10,7 @@ from pygments.token import (
     Operator,
     Punctuation,
     String,
+    Text,
 )
 
 
@@ -36,6 +37,9 @@ class CustomLexer(RegexLexer):
             (words((
                 'card'
             ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
+            (r'(\s*)(\w+)(\s)(\w+)(\s?)(=)(\s?)(\w+)(;)', bygroups(
+                Text, Keyword, Text, Name.Builtin, Text, Operator, Text, Literal, Punctuation
+            )),
             (r'^Sets?\n?', Keyword.Declaration, 'value_declarations'),
             (r'^Parameters?\n?', Keyword.Declaration, 'value_declarations'),
             (r'(?:[^\.])\w+(?=\()', Name.Variable),  # vars without .l
