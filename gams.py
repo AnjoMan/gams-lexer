@@ -40,8 +40,8 @@ class CustomLexer(RegexLexer):
             (r'(\s*)(\w+)(\s)(\w+)(\s?)(=)(\s?)(\w+)(;)', bygroups(
                 Text, Keyword, Text, Name.Builtin, Text, Operator, Text, Literal, Punctuation
             )),
-            (r'^Sets?\n?', Keyword.Declaration, 'value_declarations'),
-            (r'^Parameters?\n?', Keyword.Declaration, 'value_declarations'),
+            (r'^(Set|Equation|Parameter|Alias)s?\n?', Keyword.Declaration, 'value_declarations'),
+            (r'^\w+\s+Variables?\n?', Keyword.Declaration, 'value_declarations'),
             (r'(?:[^\.])\w+(?=\()', Name.Variable),  # vars without .l
             (words((
                 'solve', 'Solve',
