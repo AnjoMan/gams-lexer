@@ -35,7 +35,7 @@ class CustomLexer(RegexLexer):
                 "sign", "signpower", "trunc", "uniform", "uniformint",
             ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (words((
-                'card'
+                'card', 'Display',
             ), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (r'(\s*)(\w+)(\s)(\w+)(\s?)(=)(\s?)(\w+)(;)', bygroups(
                 Text, Keyword, Text, Name.Builtin, Text, Operator, Text, Literal, Punctuation
@@ -52,25 +52,38 @@ class CustomLexer(RegexLexer):
                 'minimizing',
                 'maximizing',
             ), prefix=r'\b', suffix=r'\b'), Keyword.Reserved),
-            (r'"', String, 'onStringBlock'),
+            (r'"', String, 'StringBlock'),
+            (r"'", String, 'stringBlock'),
+            #(r'\b[a-zA-z]\w+\b', Literal),
             (words(("option"), prefix=r'\b', suffix=r'\b'), Name.Builtin),
             (r'^\$onText*', Keyword, 'onTextBlock'),
             (words((
               '=e=', '=l=', '=g=', 'eq',
               '<', '>', '==',
               'or', 'and', 'not', 'set',
+              '*', '/',
             ), prefix=r'\b', suffix=r'\b'), Operator),
             (r'%\w+%', String.Interpol),
             (r'\$\w+\s', Keyword),
+            (r'$Include', Keyword, 'include'),
+        ],
+        'include': [
+            (r'\n', Text, '#pop'),
+            (r'%[\w\.]+%', String.Interpol),
         ],
         'onTextBlock': [
             (r'^\$offText*', Keyword, '#pop'),
             (r'[^\$]', Comment),
         ],
-        'onStringBlock': [
+        'StringBlock': [
             (r'[^%^"]+', String),
             (r'%\w+%', String.Interpol),
             (r'"', String, '#pop'),
+        ],
+        'stringBlock': [
+            (r"[^%^']+", String),
+            (r'%\w+%', String.Interpol),
+            (r"'", String, '#pop'),
         ],
         'value_declarations': [
             (r';', Punctuation, '#pop'),
@@ -82,5 +95,5 @@ class CustomLexer(RegexLexer):
             (r'\(.*\)', Punctuation),
             (r'\'?[\w\s]\'?', Comment),
             (r'\s*\/.+\/\n?', Name.Entity, '#pop'),
-        ]
+        ],
     }
